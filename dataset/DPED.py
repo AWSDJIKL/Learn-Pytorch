@@ -1,0 +1,67 @@
+# -*- coding: utf-8 -*-
+'''
+DPED数据集导入
+'''
+# @Time : 2021/6/2 20:15 
+# @Author : LINYANZHEN
+# @File : DPED.py
+import pickle
+import os
+from PIL import Image
+import numpy
+import torch
+import torch.utils.data
+from torchvision import transforms
+import numpy as np
+from scipy.io import loadmat
+import utils
+import time
+
+
+class DPEDDataset(torch.utils.data.Dataset):
+    def __init__(self, data_dir, img_transforms=None, loader=utils.pil_loader):
+        self.image_path_list = []
+        self.label_list = []
+        self.loader = loader
+        # 获取所有图片
+        label = 0
+        for root, dirs, files in os.walk(data_dir):
+            for i in files:
+                self.image_path_list.append(os.path.join(root, i))
+                # 将label转化为数字
+                self.label_list.append(label)
+            label += 1
+        # 数据增强
+        if img_transforms:
+            self.img_transforms = img_transforms
+        else:
+            # 使用默认的预处理
+            self.img_transforms = transforms.Compose([
+                transforms.Resize(72),
+                transforms.CenterCrop(72),
+                transforms.ToTensor(),
+                # transforms.Normalize(means, stds),
+            ])
+
+    def __getitem__(self, index):
+        path = self.image_path_list[index]
+        label = torch.tensor(self.label_list[index], dtype=torch.long)
+        img = self.loader(path)
+        if self.img_transforms:
+            img = self.img_transforms(img)
+        return img, label
+
+    def __len__(self):
+        return len(self.image_path_list)
+
+
+def prepare_dataloader():
+    train_file_path = "F:\\Dataset\\DPED\\original_images\\train"
+    test_file_path = "F:\\Dataset\\DPED\\original_images\\test"
+    # DPEDDataset(train_file_path)
+    train_loader = torch.utils.data.DataLoader(DPEDDataset(train_file_path))
+    val_loader = torch.utils.data.DataLoader(DPEDDataset(test_file_path))
+
+
+if __name__ == '__main__':
+    prepare_dataloader()
