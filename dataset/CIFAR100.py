@@ -21,14 +21,20 @@ import time
 def unpickle(file):
     with open(file, 'rb') as fo:
         dict = pickle.load(fo, encoding='bytes')
-        print(dict.keys())
     return dict
 
 
 class CIFAR100Dataset(torch.utils.data.Dataset):
     def __init__(self, pickle_file_path, img_transforms=None):
+        '''
+        CIFAR100数据集
+
+        :param pickle_file_path: pickle文件，里面装有图片矩阵、对应的数字标签和数字对应的具体标签
+        :param img_transforms: 数据预处理方式
+        '''
         image_and_label = unpickle(pickle_file_path)
         self.images = []
+        # 这里的label已经是数字了
         self.labels = image_and_label[b"fine_labels"]
         data = image_and_label[b"data"]
         # 将一维数组变成3维数组，3通道，32*32
@@ -65,14 +71,14 @@ class CIFAR100Dataset(torch.utils.data.Dataset):
 
 
 def prepare_dataloader():
-    train_file_path = "F:\\Dataset\\cifar-100-python\\train"
-    test_file_path = "F:\\Dataset\\cifar-100-python\\test"
-    label_file_path = "F:\\Dataset\\cifar-100-python\\meta"
+    train_file_path = "G:\\Dataset\\cifar-100-python\\train"
+    test_file_path = "G:\\Dataset\\cifar-100-python\\test"
+    label_file_path = "G:\\Dataset\\cifar-100-python\\meta"
     train_loader = torch.utils.data.DataLoader(CIFAR100Dataset(train_file_path))
     val_loader = torch.utils.data.DataLoader(CIFAR100Dataset(test_file_path))
-    # print(train_loader.dataset[0])
-    # print(val_loader.dataset[0])
-    # unpickle(train_file_path)
+    print(train_loader.dataset[0])
+    print(val_loader.dataset[0])
+    return train_loader, val_loader
 
 
 if __name__ == '__main__':

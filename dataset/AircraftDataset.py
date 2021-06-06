@@ -16,8 +16,18 @@ import time
 
 
 class AircraftDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir, image_and_label, all_labels, mode="train", img_transforms=None,
+    def __init__(self, data_dir, image_and_label, all_labels, img_transforms=None,
                  loader=utils.pil_loader):
+        '''
+        Aircraft数据集
+
+        :param data_dir: 图片数据的根路径
+        :param image_and_label:
+        :param all_labels:
+        :param mode:
+        :param img_transforms:
+        :param loader:
+        '''
         self.image_path_list = []
         self.label_list = []
         self.loader = loader
@@ -59,15 +69,13 @@ class AircraftDataset(torch.utils.data.Dataset):
 
 
 def prepare_dataloader():
-    data_dir = "F:/Dataset/aircraft/fgvc-aircraft-2013b/data/images"
-    train_labels = "F:/Dataset/aircraft/fgvc-aircraft-2013b/data/images_variant_train.txt"
-    val_labels = "F:/Dataset/aircraft/fgvc-aircraft-2013b/data/images_variant_val.txt"
-    all_labels = "F:/Dataset/aircraft/fgvc-aircraft-2013b/data/variants.txt"
+    data_dir = "G:/Dataset/aircraft/fgvc-aircraft-2013b/data/images"
+    train_labels = "G:/Dataset/aircraft/fgvc-aircraft-2013b/data/images_variant_train.txt"
+    val_labels = "G:/Dataset/aircraft/fgvc-aircraft-2013b/data/images_variant_val.txt"
+    all_labels = "G:/Dataset/aircraft/fgvc-aircraft-2013b/data/variants.txt"
 
-    # AircraftDataset(data_dir, train_labels, all_labels, mode="train")
-
-    train_loader = torch.utils.data.DataLoader(AircraftDataset(data_dir, train_labels, all_labels, mode="train"))
-    val_loader = torch.utils.data.DataLoader(AircraftDataset(data_dir, val_labels, all_labels, mode="validate"))
+    train_loader = torch.utils.data.DataLoader(AircraftDataset(data_dir, train_labels, all_labels))
+    val_loader = torch.utils.data.DataLoader(AircraftDataset(data_dir, val_labels, all_labels))
     print(train_loader.dataset[0])
     print(val_loader.dataset[0])
     return

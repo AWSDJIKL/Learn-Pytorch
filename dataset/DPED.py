@@ -20,6 +20,15 @@ import time
 
 class DPEDDataset(torch.utils.data.Dataset):
     def __init__(self, data_dir, img_transforms=None, loader=utils.pil_loader):
+        '''
+        DPED数据集
+
+        图片已经按照类别放在对应的文件夹内
+
+        :param data_dir:图片文件根路径
+        :param img_transforms: 图片与处理方式
+        :param loader: 图片加载函数
+        '''
         self.image_path_list = []
         self.label_list = []
         self.loader = loader
@@ -56,11 +65,14 @@ class DPEDDataset(torch.utils.data.Dataset):
 
 
 def prepare_dataloader():
-    train_file_path = "F:\\Dataset\\DPED\\original_images\\train"
-    test_file_path = "F:\\Dataset\\DPED\\original_images\\test"
+    train_file_path = "G:\\Dataset\\DPED\\original_images\\train"
+    test_file_path = "G:\\Dataset\\DPED\\original_images\\test"
     # DPEDDataset(train_file_path)
     train_loader = torch.utils.data.DataLoader(DPEDDataset(train_file_path))
     val_loader = torch.utils.data.DataLoader(DPEDDataset(test_file_path))
+    print(train_loader.dataset[0])
+    print(val_loader.dataset[0])
+    return train_loader, val_loader
 
 
 if __name__ == '__main__':

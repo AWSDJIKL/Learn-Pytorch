@@ -47,6 +47,7 @@ class ImageNetDataset(torch.utils.data.Dataset):
             m = loadmat(mat_path)
             wnid = [i[0][0] for i in m["synsets"][:]["WNID"]]
             labels = [i[0][0] for i in m["synsets"][:]["ILSVRC2012_ID"]]
+            print(labels)
             # 将WNID转换为分类ID
             for i in range(len(tem_label_list)):
                 index = wnid.index(tem_label_list[i])
@@ -97,12 +98,14 @@ class ImageNetDataset(torch.utils.data.Dataset):
 
 
 def prepare_dataloader():
-    train_data_dir = "F:/Dataset/imagenet2012/ILSVRC2012_img_train"
-    test_data_dir = "F:/Dataset/imagenet2012\ILSVRC2012_img_val"
-    devkit_dir = "dataset/ILSVRC2012_devkit_t12"
+    train_data_dir = "G:/Dataset/imagenet2012/ILSVRC2012_img_train"
+    test_data_dir = "G:/Dataset/imagenet2012\ILSVRC2012_img_val"
+    devkit_dir = "G:\Dataset\imagenet2012\ILSVRC2012_devkit_t12"
 
     train_loader = torch.utils.data.DataLoader(ImageNetDataset(train_data_dir, devkit_dir, mode="train"))
     val_loader = torch.utils.data.DataLoader(ImageNetDataset(test_data_dir, devkit_dir, mode="validate"))
+    print(train_loader.dataset[0])
+    print(val_loader.dataset[0])
     return train_loader, val_loader
 
 

@@ -32,8 +32,8 @@ def get_dataloader(dataset_name):
         val_labels = "F:/Dataset/aircraft/fgvc-aircraft-2013b/data/images_variant_val.txt"
         all_labels = "F:/Dataset/aircraft/fgvc-aircraft-2013b/data/variants.txt"
 
-        train_loader = DataLoader(AircraftDataset.AircraftDataset(data_dir, train_labels, all_labels, mode="train"))
-        val_loader = DataLoader(AircraftDataset.AircraftDataset(data_dir, val_labels, all_labels, mode="validate"))
+        train_loader = DataLoader(AircraftDataset.AircraftDataset(data_dir, train_labels, all_labels))
+        val_loader = DataLoader(AircraftDataset.AircraftDataset(data_dir, val_labels, all_labels))
         return train_loader, val_loader
     elif dataset_name == "CIFAR100":
         from dataset import CIFAR100
@@ -50,4 +50,41 @@ def get_dataloader(dataset_name):
         # DPEDDataset(train_file_path)
         train_loader = torch.utils.data.DataLoader(DPED.DPEDDataset(train_file_path))
         val_loader = torch.utils.data.DataLoader(DPED.DPEDDataset(test_file_path))
+        return train_loader, val_loader
+    elif dataset_name == "DTD":
+        from dataset import DTD
+        img_dir = "G:\\Dataset\\dtd\\images"
+        train_file_path = "G:\\Dataset\\dtd\\labels\\train1.txt"
+        test_file_path = "G:\\Dataset\\dtd\\labels\\test1.txt"
+        val_file_path = "G:\\Dataset\\dtd\\labels\\val1.txt"
+
+        train_loader = torch.utils.data.DataLoader(DTD.DTDDataset(train_file_path, img_dir))
+        val_loader = torch.utils.data.DataLoader(DTD.DTDDataset(val_file_path, img_dir))
+        return train_loader, val_loader
+    elif dataset_name == "GTSR":
+        from dataset import GTSR
+        train_file_path = "G:\\Dataset\\GTSRB\\GTSRB\\Final_Training\\Images"
+        test_file_path = "G:\\Dataset\\GTSRB\\GTSRB\\Final_Test\\Images"
+        csv_file_path = "G:\\Dataset\\GTSRB\\GTSRB\\Final_Test\\GT-final_test.csv"
+
+        train_loader = torch.utils.data.DataLoader(GTSR.GTSRDataset(train_file_path))
+        val_loader = torch.utils.data.DataLoader(GTSR.GTSRDataset(test_file_path, csv_path=csv_file_path, mode="test"))
+        return train_loader, val_loader
+    elif dataset_name == "Flwr":
+        from dataset import Flwr
+        train_file_path = "G:\\Dataset\\oxford-102-flower-pytorch\\flower_data\\train"
+        val_file_path = "G:\\Dataset\\oxford-102-flower-pytorch\\flower_data\\valid"
+        test_file_path = "G:\\Dataset\\oxford-102-flower-pytorch\\flower_data\\test"
+
+        train_loader = torch.utils.data.DataLoader(Flwr.FlwrDataset(train_file_path, mode="train"))
+        val_loader = torch.utils.data.DataLoader(Flwr.FlwrDataset(val_file_path, mode="val"))
+        return train_loader, val_loader
+    elif dataset_name == "SVHN":
+        from dataset import SVHN
+        train_file_path = "G:\\Dataset\\SVHN\\train_32x32.mat"
+        extra_file_path = "G:\\Dataset\\SVHN\\extra_32x32.mat"
+        test_file_path = "G:\\Dataset\\SVHN\\test_32x32.mat"
+
+        train_loader = torch.utils.data.DataLoader(SVHN.SVHNDataset(train_file_path))
+        val_loader = torch.utils.data.DataLoader(SVHN.SVHNDataset(test_file_path))
         return train_loader, val_loader
