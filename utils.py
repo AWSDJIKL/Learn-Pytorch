@@ -9,10 +9,36 @@
 from PIL import Image
 import torch
 from torch.utils.data import Dataset, DataLoader
+import cv2
+import random
 
 
-def pil_loader(path):
-    return Image.open(path).convert('RGB')
+def image_loader(image_path):
+    return Image.open(image_path).convert('RGB')
+
+
+def video_loader(video_path, frame_num=16):
+    # print(video_path)
+    capture = cv2.VideoCapture(video_path)
+    # 获取视频总帧数
+    frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
+    # print(frame_count)
+    result = []
+    # 有些视频的某些帧取不到，原因未知
+    for i in random.sample(range(frame_count), frame_num):
+        capture.set(1, i)
+        rval, frame = capture.read()
+        if not rval:
+            print(video_path)
+            print("frame_count=", frame_count)
+            print("i", i)
+            # 取不到的帧数量不多，先放弃
+            continue
+        # print(frame)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = Image.fromarray(frame)
+        result.append(frame)
+    return result
 
 
 def get_dataloader(dataset_name):
@@ -87,4 +113,27 @@ def get_dataloader(dataset_name):
 
         train_loader = torch.utils.data.DataLoader(SVHN.SVHNDataset(train_file_path))
         val_loader = torch.utils.data.DataLoader(SVHN.SVHNDataset(test_file_path))
+        return train_loader, val_loader
+    elif dataset_name == "OGlt":
+        from dataset import OGlt
+        data_dir = "G:\Dataset\Omniglot"
+        OGlt.OGltDataset.shuffle_train_test(train_rate=0.7)
+        train_loader = torch.utils.data.DataLoader(OGlt.OGltDataset(data_dir, mode="train"))
+        val_loader = torch.utils.data.DataLoader(OGlt.OGltDataset(data_dir, mode="test"))
+        print(train_loader.dataset[0])
+        print(val_loader.dataset[0])
+        return train_loader, val_loader
+    elif dataset_name == "UCF":
+        from dataset import UCF
+        train_file_path = "G:/Dataset/ucfTrainTestlist/trainlist01.txt"
+        test_file_path = "G:/Dataset/ucfTrainTestlist/testlist01.txt"
+        video_to_label = "G:/Dataset/ucfTrainTestlist/classInd.txt"
+        video_dir = "G:/Dataset/UCF-101"
+        # 截取帧保存路径
+        train_image_save_path = "G:/Dataset/UCF-101_image/train"
+        test_image_save_path = "G:/Dataset/UCF-101_image/test"
+        train_loader = torch.utils.data.DataLoader(
+            UCF.UCFDataset(video_dir, train_file_path, video_to_label, train_image_save_path, mode="train"))
+        val_loader = torch.utils.data.DataLoader(
+            UCF.UCFDataset(video_dir, test_file_path, video_to_label, test_image_save_path, mode="test"))
         return train_loader, val_loader

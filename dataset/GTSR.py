@@ -20,7 +20,7 @@ import scipy.io as scio
 
 
 class GTSRDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir, csv_path=None, mode="train", img_transforms=None, loader=utils.pil_loader):
+    def __init__(self, data_dir, csv_path=None, mode="train", img_transforms=None, loader=utils.image_loader):
         self.image_path_list = []
         self.label_list = []
         if mode == "train":

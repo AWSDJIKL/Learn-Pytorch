@@ -20,19 +20,20 @@ import scipy.io as scio
 
 
 class FlwrDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir, mode="train", img_transforms=None, loader=utils.pil_loader):
+    def __init__(self, data_dir, mode="train", img_transforms=None, loader=utils.image_loader):
         self.image_path_list = []
         self.label_list = []
+
         if mode == "train":
             for root, dirs, files in os.walk(data_dir):
                 for i in files:
                     self.image_path_list.append(os.path.join(root, i))
-                    self.label_list.append(int(os.path.split(root)[-1]))
+                    self.label_list.append(int(os.path.split(root)[-1]) - 1)
         elif mode == "val":
             for root, dirs, files in os.walk(data_dir):
                 for i in files:
                     self.image_path_list.append(os.path.join(root, i))
-                    self.label_list.append(int(os.path.split(root)[-1]))
+                    self.label_list.append(int(os.path.split(root)[-1]) - 1)
         elif mode == "test":
             pass
         # 数据增强
@@ -47,6 +48,8 @@ class FlwrDataset(torch.utils.data.Dataset):
                 # transforms.Normalize(means, stds),
             ])
         self.loader = loader
+        # 分类类别数，用于最后的全连接分类
+        self.num_classes = len(set(self.label_list))
 
     def __getitem__(self, index):
         path = self.image_path_list[index]

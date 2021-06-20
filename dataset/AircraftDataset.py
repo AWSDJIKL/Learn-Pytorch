@@ -17,7 +17,7 @@ import time
 
 class AircraftDataset(torch.utils.data.Dataset):
     def __init__(self, data_dir, image_and_label, all_labels, img_transforms=None,
-                 loader=utils.pil_loader):
+                 loader=utils.image_loader):
         '''
         Aircraft数据集
 

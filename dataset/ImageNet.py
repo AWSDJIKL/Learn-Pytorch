@@ -17,7 +17,7 @@ import time
 
 
 class ImageNetDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir, devkit_dir, mode="train", img_transforms=None, loader=utils.pil_loader):
+    def __init__(self, data_dir, devkit_dir, mode="train", img_transforms=None, loader=utils.image_loader):
         '''
 
         :param data_dir: 图片数据路径

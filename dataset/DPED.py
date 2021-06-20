@@ -19,7 +19,7 @@ import time
 
 
 class DPEDDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir, img_transforms=None, loader=utils.pil_loader):
+    def __init__(self, data_dir, img_transforms=None, loader=utils.image_loader):
         '''
         DPED数据集
 

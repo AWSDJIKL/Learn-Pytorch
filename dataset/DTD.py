@@ -20,7 +20,7 @@ import scipy.io as scio
 
 
 class DTDDataset(torch.utils.data.Dataset):
-    def __init__(self, label_file_path, img_dir, img_transforms=None, loader=utils.pil_loader):
+    def __init__(self, label_file_path, img_dir, img_transforms=None, loader=utils.image_loader):
         '''
         The data is split in three equal parts, in train, validation and test, 40 images per class, for each split.
         We provide the ground truth annotation for both key and joint attributes,
