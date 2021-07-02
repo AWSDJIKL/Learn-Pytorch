@@ -35,7 +35,7 @@ class CIFAR100Dataset(torch.utils.data.Dataset):
         image_and_label = unpickle(pickle_file_path)
         self.images = []
         # 这里的label已经是数字了
-        self.labels = image_and_label[b"fine_labels"]
+        self.label_list = image_and_label[b"fine_labels"]
         data = image_and_label[b"data"]
         # 将一维数组变成3维数组，3通道，32*32
         for i in data:
@@ -55,7 +55,8 @@ class CIFAR100Dataset(torch.utils.data.Dataset):
             ])
         # print(self.images[0])
         # print(self.labels[0])
-
+        # 分类类别数，用于最后的全连接分类
+        self.num_classes = len(set(self.label_list))
     def __getitem__(self, index):
         # 将数字转成图像
         # print(np.transpose(self.images[index], (1, 2, 0)))
@@ -64,7 +65,7 @@ class CIFAR100Dataset(torch.utils.data.Dataset):
         # img.show()
         if self.img_transforms:
             img = self.img_transforms(img)
-        return img, self.labels[index]
+        return img, self.label_list[index]
 
     def __len__(self):
         return len(self.images)

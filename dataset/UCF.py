@@ -22,7 +22,7 @@ import h5py
 
 class UCFDataset(torch.utils.data.Dataset):
     def __init__(self, data_dir, video_path_txt, video_to_label, image_save_path, mode="train", img_transforms=None,
-                 image_loader=utils.image_loader, video_loader=utils.video_loader, frame_count=16):
+                 image_loader=utils.image_loader, video_loader=utils.video_loader, frame_count=1):
         start_time = time.time()
         video_path_list = []
         label_list = []
@@ -33,7 +33,7 @@ class UCFDataset(torch.utils.data.Dataset):
                 for i in file.readlines():
                     i = i.split()
                     video_path_list.append(os.path.join(data_dir, i[0]))
-                    label_list.append(int(i[1]))
+                    label_list.append(int(i[1]) - 1)
         elif mode == "test":
             label_dict = {}
             with open(video_to_label, "r")as file:
@@ -43,7 +43,7 @@ class UCFDataset(torch.utils.data.Dataset):
             with open(video_path_txt, "r")as file:
                 for i in file.readlines():
                     video_path_list.append(os.path.join(data_dir, i))
-                    label_list.append(label_dict[os.path.split(i)[0]])
+                    label_list.append(label_dict[os.path.split(i)[0]] - 1)
         self.image_path_list = []
         self.label_list = []
         # 统一路径格式
@@ -86,6 +86,8 @@ class UCFDataset(torch.utils.data.Dataset):
                 # transforms.Normalize(means, stds),
             ])
         self.loader = image_loader
+        # 分类类别数，用于最后的全连接分类
+        self.num_classes = len(set(self.label_list))
         end_time = time.time()
         print("截取帧保存完毕，用时{}min".format((end_time - start_time) / 60))
 
@@ -95,8 +97,6 @@ class UCFDataset(torch.utils.data.Dataset):
         img = self.loader(path)
         if self.img_transforms is not None:
             img = self.img_transforms(img)
-        print(self.image_path_list[index])
-        print(label)
         return img, label
 
     def __len__(self):
@@ -110,7 +110,8 @@ def prepare_dataloader():
     video_dir = "G:/Dataset/UCF-101"
     train_image_save_path = "G:/Dataset/UCF-101_image/train"
     test_image_save_path = "G:/Dataset/UCF-101_image/test"
-    train_loader = torch.utils.data.DataLoader(UCFDataset(video_dir, train_file_path, video_to_label, train_image_save_path, mode="train"))
+    train_loader = torch.utils.data.DataLoader(
+        UCFDataset(video_dir, train_file_path, video_to_label, train_image_save_path, mode="train"))
     val_loader = torch.utils.data.DataLoader(
         UCFDataset(video_dir, test_file_path, video_to_label, test_image_save_path, mode="test"))
     print(train_loader.dataset[0])

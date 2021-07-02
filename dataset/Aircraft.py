@@ -55,6 +55,8 @@ class AircraftDataset(torch.utils.data.Dataset):
                 transforms.ToTensor(),
                 # transforms.Normalize(means, stds),
             ])
+        # 分类类别数，用于最后的全连接分类
+        self.num_classes = len(set(self.label_list))
 
     def __getitem__(self, index):
         path = self.image_path_list[index]

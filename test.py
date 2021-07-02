@@ -5,25 +5,14 @@
 # @Time : 2021/4/12 14:35 
 # @Author : LINYANZHEN
 # @File : test.py
-import os
-import random
-
 import torch
-import torch.utils.data
-from torchvision import transforms
-import numpy as np
-from scipy.io import loadmat
-from PIL import Image
-import time
-import utils
-import cv2
-
-if __name__ == '__main__':
-    l = list(range(1, 21))
-    random.shuffle(l)
-    print(l)
-    train = [l.pop() for i in range(int(20 * 0.7))]
-    print(train)
-    test = l
-
-    print(test)
+torch.backends.cuda.matmul.allow_tf32 = True
+torch.backends.cudnn.benchmark = False
+torch.backends.cudnn.deterministic = False
+torch.backends.cudnn.allow_tf32 = True
+data = torch.randn([1, 256, 9, 9], dtype=torch.float, device='cuda', requires_grad=True)
+net = torch.nn.Conv2d(256, 256, kernel_size=[3, 3], padding=[1, 1], stride=[1, 1], dilation=[1, 1], groups=1)
+net = net.cuda().float()
+out = net(data)
+out.backward(torch.randn_like(out))
+torch.cuda.synchronize()

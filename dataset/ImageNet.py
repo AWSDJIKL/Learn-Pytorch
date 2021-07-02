@@ -47,15 +47,15 @@ class ImageNetDataset(torch.utils.data.Dataset):
             m = loadmat(mat_path)
             wnid = [i[0][0] for i in m["synsets"][:]["WNID"]]
             labels = [i[0][0] for i in m["synsets"][:]["ILSVRC2012_ID"]]
-            print(labels)
             # 将WNID转换为分类ID
             for i in range(len(tem_label_list)):
                 index = wnid.index(tem_label_list[i])
-                tem_label_list[i] = labels[index]
+                # label要从0开始
+                tem_label_list[i] = int(labels[index]) - 1
             # 展开成一维的
             for i in range(len(tem_image_paths)):
                 image_path_list.extend(tem_image_paths[i])
-                label_list.extend([tem_label_list[i][0]] * len(tem_image_paths[i]))
+                label_list.extend([tem_label_list[i]] * len(tem_image_paths[i]))
         elif mode == "validate":
             for root, dirs, files in os.walk(data_dir):
                 for i in files:
@@ -63,7 +63,8 @@ class ImageNetDataset(torch.utils.data.Dataset):
             with open(os.path.join(devkit_dir, "data", "ILSVRC2012_validation_ground_truth.txt"), "r") as file:
                 for line in file.readlines():
                     # 去掉空格
-                    label_list.append(line.strip())
+                    label_list.append(int(line.strip()))
+            print(label_list)
         elif mode == "test":
             for root, dirs, files in os.walk(data_dir):
                 for i in files:
@@ -82,7 +83,8 @@ class ImageNetDataset(torch.utils.data.Dataset):
         self.image_path_list = image_path_list
         self.label_list = label_list
         self.loader = loader
-
+        # 分类类别数，用于最后的全连接分类
+        self.num_classes = len(set(self.label_list))
         print("ImageNet读取完成")
 
     def __getitem__(self, index):

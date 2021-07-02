@@ -47,6 +47,8 @@ class OGltDataset(torch.utils.data.Dataset):
                 if len(files) == 20:
                     for file in files:
                         # 图片命名为 4位数类ID_人编号.png
+                        print(file)
+                        print(self.train[i])
                         if int(file[-6:-4]) in self.train[i]:
                             self.image_path_list.append(os.path.join(root, file))
                             self.label_list.append(i)

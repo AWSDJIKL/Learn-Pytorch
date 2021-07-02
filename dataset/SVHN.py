@@ -44,7 +44,8 @@ class SVHNDataset(torch.utils.data.Dataset):
         # print(y.shape)  # (73257, 1)
         for i in range(x.shape[-1]):
             self.image_list.append(x[:, :, :, i])
-            self.label_list.append(y[i])
+            # 标签要从0开始
+            self.label_list.append(int(y[i]) - 1)
         # 数据增强
         if img_transforms:
             self.img_transforms = img_transforms
@@ -56,11 +57,14 @@ class SVHNDataset(torch.utils.data.Dataset):
                 transforms.ToTensor(),
                 # transforms.Normalize(means, stds),
             ])
+        print(self.label_list)
+        # 分类类别数，用于最后的全连接分类
+        self.num_classes = len(set(self.label_list))
 
     def __getitem__(self, index):
         # 将数字转成图像
         img = Image.fromarray(self.image_list[index])
-        img.show()
+        # img.show()
         if self.img_transforms:
             img = self.img_transforms(img)
         return img, self.label_list[index]

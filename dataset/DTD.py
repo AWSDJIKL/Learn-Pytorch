@@ -61,6 +61,9 @@ class DTDDataset(torch.utils.data.Dataset):
                 # transforms.Normalize(means, stds),
             ])
         self.loader = loader
+        # 分类类别数，用于最后的全连接分类
+        self.num_classes = len(set(self.label_list))
+        print("数据集读取完毕")
 
     def __getitem__(self, index):
         path = self.image_path_list[index]

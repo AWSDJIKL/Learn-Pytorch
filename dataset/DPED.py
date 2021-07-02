@@ -38,8 +38,11 @@ class DPEDDataset(torch.utils.data.Dataset):
             for i in files:
                 self.image_path_list.append(os.path.join(root, i))
                 # 将label转化为数字
+                # print(label)
                 self.label_list.append(label)
-            label += 1
+                # print(label)
+            if len(files)>0:
+                label += 1
         # 数据增强
         if img_transforms:
             self.img_transforms = img_transforms
@@ -51,6 +54,9 @@ class DPEDDataset(torch.utils.data.Dataset):
                 transforms.ToTensor(),
                 # transforms.Normalize(means, stds),
             ])
+        # 分类类别数，用于最后的全连接分类
+        self.num_classes = len(set(self.label_list))
+        print("数据集读取完毕")
 
     def __getitem__(self, index):
         path = self.image_path_list[index]

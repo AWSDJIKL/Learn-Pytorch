@@ -26,7 +26,10 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-
+#不上传模型
+*.pth
+#不上传损失图像
+*.jpg
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.

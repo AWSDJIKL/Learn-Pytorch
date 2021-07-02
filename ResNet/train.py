@@ -26,6 +26,7 @@ def train(model, train_loader, criterion, optimizer, epoch):
             x = x.to(device)
             y = y.to(device)
             out = model(x)
+            # print("y", y)
             optimizer.zero_grad()
             # out = out.view(17, 64)
             loss = criterion(out, y)
@@ -33,12 +34,6 @@ def train(model, train_loader, criterion, optimizer, epoch):
             optimizer.step()
             loss_list.append(loss.item())
         print("  用时:{}min".format((time.time() - epoch_start_time) / 60))
-    # 画出损失图像
-    plt.figure(figsize=(10, 5))
-    plt.plot(loss_list, "b")
-    plt.title('loss')
-    plt.savefig('resnet_with_adapter_loss.jpg', dpi=256)
-    plt.close()
 
 
 def test(model, test_loader):
@@ -60,20 +55,22 @@ def test(model, test_loader):
 
 if __name__ == '__main__':
     start_time = time.time()
-    train_loader, test_loader = utils.get_dataloader("OGlt")
+    train_loader, test_loader = utils.get_dataloader("ImageNet")
+    # train_loader, test_loader = utils.get_dataloader("Aircraft")
+    # train_loader, test_loader = utils.get_dataloader("OGlt")
     num_classes = [train_loader.dataset.num_classes]
     device = torch.device('cuda:0')
     model = resnet.resnet18(num_classes=num_classes).to(device)
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-8)
     criterion = nn.CrossEntropyLoss()
-    epoch = 10
+    epoch = 5
 
-    # 训练模型
-    train(model, train_loader, criterion, optimizer, epoch)
-    # 保存模型
-    print("训练完成")
-    torch.save(model, "adapter_with_adapter.pth")
-    print("模型已保存")
+    # # 训练模型
+    # train(model, train_loader, criterion, optimizer, epoch)
+    # # 保存模型
+    # print("训练完成")
+    # torch.save(model, "adapter_with_adapter.pth")
+    # print("模型已保存")
 
     # 测试模型
     model = torch.load("adapter_with_adapter.pth")
