@@ -10,14 +10,12 @@ import os
 import torch
 import torch.utils.data
 from torchvision import transforms
-import numpy as np
 from scipy.io import loadmat
-import utils
-import time
+import classify_utils
 
 
 class ImageNetDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir, devkit_dir, mode="train", img_transforms=None, loader=utils.image_loader):
+    def __init__(self, data_dir, devkit_dir, mode="train", img_transforms=None, loader=classify_utils.image_loader):
         '''
 
         :param data_dir: 图片数据路径

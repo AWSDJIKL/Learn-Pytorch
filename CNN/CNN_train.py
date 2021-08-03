@@ -10,7 +10,7 @@ import time
 
 import torch
 import torch.nn as nn
-import utils
+import classify_utils
 from torch.utils.data import Dataset, DataLoader
 import matplotlib.pyplot as plt
 import numpy as np
@@ -67,7 +67,7 @@ def test(model, test_loader):
 
 if __name__ == '__main__':
     start_time = time.time()
-    train_loader, test_loader = utils.get_dataloader("UCF")
+    train_loader, test_loader = classify_utils.get_classify_dataloader("UCF")
 
     device = torch.device('cuda:0')
     model = SimpleCNN.SimpleCNN().to(device)

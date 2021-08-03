@@ -5,19 +5,12 @@ SVHN数据集导入
 # @Time : 2021/6/6 16:07 
 # @Author : LINYANZHEN
 # @File : SVHN.py
-import pickle
-import os
+
 from PIL import Image
-import pandas as pd
 import torch
 import torch.utils.data
 from torchvision import transforms
-import numpy as np
-from scipy.io import loadmat
-import utils
-import time
 import scipy.io as scio
-import h5py
 
 
 class SVHNDataset(torch.utils.data.Dataset):

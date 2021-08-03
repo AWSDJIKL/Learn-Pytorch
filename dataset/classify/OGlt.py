@@ -5,20 +5,13 @@ OGlt数据集导入
 # @Time : 2021/6/6 14:52 
 # @Author : LINYANZHEN
 # @File : OGlt.py
-import pickle
+
 import os
 import random
-
-from PIL import Image
-import pandas as pd
 import torch
 import torch.utils.data
 from torchvision import transforms
-import numpy as np
-from scipy.io import loadmat
-import utils
-import time
-import scipy.io as scio
+import classify_utils
 
 
 class OGltDataset(torch.utils.data.Dataset):
@@ -37,7 +30,7 @@ class OGltDataset(torch.utils.data.Dataset):
             cls.train.append([l.pop() for i in range(int(20 * train_rate))])
             cls.test.append(l)
 
-    def __init__(self, data_dir, mode="train", img_transforms=None, loader=utils.image_loader):
+    def __init__(self, data_dir, mode="train", img_transforms=None, loader=classify_utils.image_loader):
         self.image_path_list = []
         self.label_list = []
         if mode == "train":

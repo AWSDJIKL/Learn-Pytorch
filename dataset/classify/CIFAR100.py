@@ -6,16 +6,11 @@ CIFAR100数据集导入
 # @Author : LINYANZHEN
 # @File : CIFAR100.py
 import pickle
-import os
 from PIL import Image
-import numpy
 import torch
 import torch.utils.data
 from torchvision import transforms
 import numpy as np
-from scipy.io import loadmat
-import utils
-import time
 
 
 def unpickle(file):
@@ -57,6 +52,7 @@ class CIFAR100Dataset(torch.utils.data.Dataset):
         # print(self.labels[0])
         # 分类类别数，用于最后的全连接分类
         self.num_classes = len(set(self.label_list))
+
     def __getitem__(self, index):
         # 将数字转成图像
         # print(np.transpose(self.images[index], (1, 2, 0)))

@@ -5,21 +5,15 @@ DPED数据集导入
 # @Time : 2021/6/2 20:15 
 # @Author : LINYANZHEN
 # @File : DPED.py
-import pickle
 import os
-from PIL import Image
-import numpy
 import torch
 import torch.utils.data
 from torchvision import transforms
-import numpy as np
-from scipy.io import loadmat
-import utils
-import time
+import classify_utils
 
 
 class DPEDDataset(torch.utils.data.Dataset):
-    def __init__(self, data_dir, img_transforms=None, loader=utils.image_loader):
+    def __init__(self, data_dir, img_transforms=None, loader=classify_utils.image_loader):
         '''
         DPED数据集
 
@@ -41,7 +35,7 @@ class DPEDDataset(torch.utils.data.Dataset):
                 # print(label)
                 self.label_list.append(label)
                 # print(label)
-            if len(files)>0:
+            if len(files) > 0:
                 label += 1
         # 数据增强
         if img_transforms:

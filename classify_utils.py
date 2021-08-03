@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 '''
-工具函数
+分类任务的工具函数
 '''
 # @Time : 2021/5/31 16:06 
 # @Author : LINYANZHEN
-# @File : utils.py
+# @File : classify_utils.py
 
 from PIL import Image
 import torch
@@ -14,10 +14,21 @@ import random
 
 
 def image_loader(image_path):
+    '''
+
+    :param image_path:
+    :return:
+    '''
     return Image.open(image_path).convert('RGB')
 
 
 def video_loader(video_path, frame_num=16):
+    '''
+
+    :param video_path:
+    :param frame_num:
+    :return:
+    '''
     # print(video_path)
     capture = cv2.VideoCapture(video_path)
     # 获取视频总帧数
@@ -41,20 +52,30 @@ def video_loader(video_path, frame_num=16):
     return result
 
 
-def prepare_dataloaders(dataset_list):
+def prepare_classify_dataloaders(dataset_list):
+    '''
+
+    :param dataset_list:
+    :return:
+    '''
     train_loader_list = []
     val_loader_list = []
     num_classes_list = []
     for dataset in dataset_list:
-        train_loader, val_loader, num_classes = get_dataloader(dataset)
+        train_loader, val_loader, num_classes = get_classify_dataloader(dataset)
         train_loader_list.append(train_loader)
         val_loader_list.append(val_loader)
     return train_loader_list, val_loader_list, num_classes_list
 
 
-def get_dataloader(dataset_name):
+def get_classify_dataloader(dataset_name):
+    '''
+
+    :param dataset_name:
+    :return:
+    '''
     if dataset_name == "ImageNet":
-        from dataset import ImageNet
+        from dataset.classify import ImageNet
         train_data_dir = "D:/Dataset/imagenet2012/ILSVRC2012_img_train"
         val_data_dir = "D:/Dataset/imagenet2012/ILSVRC2012_img_val"
         devkit_dir = "D:/Dataset/imagenet2012/ILSVRC2012_devkit_t12/ILSVRC2012_devkit_t12"
@@ -68,7 +89,7 @@ def get_dataloader(dataset_name):
         num_classes = train_loader.dataset.num_classes
         return train_loader, val_loader, num_classes
     elif dataset_name == "Aircraft":
-        from dataset import Aircraft
+        from dataset.classify import Aircraft
         data_dir = "D:/Dataset/fgvc-aircraft-2013b/data/images"
         train_labels = "D:/Dataset/fgvc-aircraft-2013b/data/images_variant_train.txt"
         val_labels = "D:/Dataset/fgvc-aircraft-2013b/data/images_variant_val.txt"
@@ -80,7 +101,7 @@ def get_dataloader(dataset_name):
         num_classes = train_loader.dataset.num_classes
         return train_loader, val_loader, num_classes
     elif dataset_name == "CIFAR100":
-        from dataset import CIFAR100
+        from dataset.classify import CIFAR100
         train_file_path = "D:/Dataset/cifar-100-python/cifar-100-python/train"
         val_file_path = "D:/Dataset/cifar-100-python/cifar-100-python/test"
         label_file_path = "D:/Dataset/cifar-100-python/cifar-100-python/meta"
@@ -89,7 +110,7 @@ def get_dataloader(dataset_name):
         num_classes = train_loader.dataset.num_classes
         return train_loader, val_loader, num_classes
     elif dataset_name == "DPED":
-        from dataset import DPED
+        from dataset.classify import DPED
         train_file_path = "D:/Dataset/DPED/original_images/train"
         test_file_path = "D:/Dataset/DPED/original_images/test"
         # DPEDDataset(train_file_path)
@@ -99,7 +120,7 @@ def get_dataloader(dataset_name):
         num_classes = train_loader.dataset.num_classes
         return train_loader, val_loader, num_classes
     elif dataset_name == "DTD":
-        from dataset import DTD
+        from dataset.classify import DTD
         img_dir = "D:/Dataset/dtd/images"
         train_file_path = "D:/Dataset/dtd/labels/train1.txt"
         test_file_path = "D:/Dataset/dtd/labels/test1.txt"
@@ -110,7 +131,7 @@ def get_dataloader(dataset_name):
         num_classes = train_loader.dataset.num_classes
         return train_loader, val_loader, num_classes
     elif dataset_name == "GTSR":
-        from dataset import GTSR
+        from dataset.classify import GTSR
         train_file_path = "D:/Dataset/GTSRB/GTSRB/Final_Training/Images"
         test_file_path = "D:/Dataset/GTSRB/GTSRB/Final_Test/Images"
         csv_file_path = "D:/Dataset/GTSRB/GTSRB/Final_Test/GT-final_test.csv"
@@ -121,7 +142,7 @@ def get_dataloader(dataset_name):
         num_classes = train_loader.dataset.num_classes
         return train_loader, val_loader, num_classes
     elif dataset_name == "Flwr":
-        from dataset import Flwr
+        from dataset.classify import Flwr
         train_file_path = "D:/Dataset/oxford-102-flower-pytorch/flower_data/train"
         val_file_path = "D:/Dataset/oxford-102-flower-pytorch/flower_data/valid"
         test_file_path = "D:/Dataset/oxford-102-flower-pytorch/flower_data/test"
@@ -131,7 +152,7 @@ def get_dataloader(dataset_name):
         num_classes = train_loader.dataset.num_classes
         return train_loader, val_loader, num_classes
     elif dataset_name == "SVHN":
-        from dataset import SVHN
+        from dataset.classify import SVHN
         train_file_path = "D:/Dataset/SVHN/train_32x32.mat"
         extra_file_path = "D:/Dataset/SVHN/extra_32x32.mat"
         test_file_path = "D:/Dataset/SVHN/test_32x32.mat"
@@ -141,7 +162,7 @@ def get_dataloader(dataset_name):
         num_classes = train_loader.dataset.num_classes
         return train_loader, val_loader, num_classes
     elif dataset_name == "OGlt":
-        from dataset import OGlt
+        from dataset.classify import OGlt
         data_dir = "D:/Dataset/archive"
         OGlt.OGltDataset.shuffle_train_test(train_rate=0.7)
         train_loader = torch.utils.data.DataLoader(OGlt.OGltDataset(data_dir, mode="train"))
@@ -149,7 +170,7 @@ def get_dataloader(dataset_name):
         num_classes = train_loader.dataset.num_classes
         return train_loader, val_loader, num_classes
     elif dataset_name == "UCF":
-        from dataset import UCF
+        from dataset.classify import UCF
         train_file_path = "D:/Dataset/ucfTrainTestlist/trainlist01.txt"
         test_file_path = "D:/Dataset/ucfTrainTestlist/testlist01.txt"
         video_to_label = "D:/Dataset/ucfTrainTestlist/classInd.txt"

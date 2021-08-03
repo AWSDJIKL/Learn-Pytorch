@@ -5,22 +5,15 @@ DTD数据集导入
 # @Time : 2021/6/3 10:40 
 # @Author : LINYANZHEN
 # @File : DTD.py
-import pickle
 import os
-from PIL import Image
-import numpy
 import torch
 import torch.utils.data
 from torchvision import transforms
-import numpy as np
-from scipy.io import loadmat
-import utils
-import time
-import scipy.io as scio
+import classify_utils
 
 
 class DTDDataset(torch.utils.data.Dataset):
-    def __init__(self, label_file_path, img_dir, img_transforms=None, loader=utils.image_loader):
+    def __init__(self, label_file_path, img_dir, img_transforms=None, loader=classify_utils.image_loader):
         '''
         The data is split in three equal parts, in train, validation and test, 40 images per class, for each split.
         We provide the ground truth annotation for both key and joint attributes,

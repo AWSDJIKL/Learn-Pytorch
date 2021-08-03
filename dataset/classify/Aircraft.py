@@ -9,15 +9,12 @@ import os
 import torch
 import torch.utils.data
 from torchvision import transforms
-import numpy as np
-from scipy.io import loadmat
-import utils
-import time
+import classify_utils
 
 
 class AircraftDataset(torch.utils.data.Dataset):
     def __init__(self, data_dir, image_and_label, all_labels, img_transforms=None,
-                 loader=utils.image_loader):
+                 loader=classify_utils.image_loader):
         '''
         Aircraft数据集
 
